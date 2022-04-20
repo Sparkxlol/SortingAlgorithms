@@ -12,7 +12,9 @@ public:
 	static void bucketSort(int[], const int, const int);
 	static void countingSort(int[], const int);
 	static void radixSort(int[], const int);
+	static void mergeSort(int[], const int, const int);
 private:
+	static void digitCountingSort(int[], const int, const int);
 	static void swap(int[], int, int);
 };
 

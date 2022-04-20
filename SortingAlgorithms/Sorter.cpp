@@ -163,9 +163,25 @@ void Sorter::bucketSort(int arr[], const int size, const int numBuckets)
 }
 
 
+/*
+* Uses counting sort to count each digit and sort each digit.
+* Instead of sorting for each number, it sorts each number
+* by every digit.
+* 
+* Big O: O(n * k)	k: range of numbers 
+* Stable
+*/
 void Sorter::radixSort(int arr[], const int size)
 {
+	int max = 0;
+	for (int i = 0; i < size; i++)
+	{
+		if (arr[i] > max)
+			max = arr[i];
+	}
 
+	for (int i = 1; max / i > 0; i *= 10)
+		digitCountingSort(arr, size, i);
 }
 
 
@@ -196,7 +212,7 @@ void Sorter::countingSort(int arr[], const int size)
 
 	// Adds the previous amount in the array to the current index.
 	for (int i = 1; i <= max; i++)
-		countArr[i] = countArr[i] + countArr[i - 1];
+		countArr[i] += countArr[i - 1];
 
 	// Takes the number in countArr and decreases it by one, then sets that
 	// index in the new array to the old array's corresponding value.
@@ -212,6 +228,45 @@ void Sorter::countingSort(int arr[], const int size)
 
 	delete[] newArr;
 	delete[] countArr;
+}
+
+
+// Counting sort based on digit for radix sort.
+void Sorter::digitCountingSort(int arr[], const int size, const int exponent)
+{
+	int* newArr = new int[size];
+	int countArr[10] = { }; // Each digit
+
+	// Uses arr[i] / exponent % 10 because if the value doesn't
+	// have a digit at the wanted exponent it is 0.
+	for (int i = 0; i < size; i++)
+		countArr[(arr[i] / exponent) % 10]++;
+
+	for (int i = 1; i < 10; i++)
+		countArr[i] += countArr[i - 1];
+
+	for (int i = size - 1; i >= 0; i--)
+	{
+		newArr[countArr[(arr[i] / exponent) % 10] - 1] = arr[i];
+		countArr[(arr[i] / exponent) % 10]--;
+	}
+
+	for (int i = 0; i < size; i++)
+		arr[i] = newArr[i];
+
+	delete[] newArr;
+}
+
+
+void Sorter::mergeSort(int arr[], int min, int max)
+{
+	if (max >= min)
+		return;
+
+	int mid = (min + max) / 2;
+
+	mergeSort(arr, min, mid);
+	mergeSort(arr, mid + 1, max);
 }
 
 
